@@ -25,10 +25,8 @@ class BackyardFlyer(Drone):
         self.in_mission = True
         self.check_state = {}
 
-        # initial state
         self.flight_state = States.MANUAL
 
-        # TODO: Register all your callbacks here
         self.register_callback(MsgID.LOCAL_POSITION, self.local_position_callback)
         self.register_callback(MsgID.LOCAL_VELOCITY, self.velocity_callback)
         self.register_callback(MsgID.STATE, self.state_callback)
@@ -44,8 +42,7 @@ class BackyardFlyer(Drone):
                     self.waypoint_transition()
                 else:
                     if np.linalg.norm(self.local_velocity[0:2]) < 1.0:
-                        self.landing_transition()
-       
+                        self.landing_transition()      
 
     def velocity_callback(self):
         if self.flight_state == States.LANDING:
@@ -63,8 +60,6 @@ class BackyardFlyer(Drone):
         elif self.flight_state == States.DISARMING:
             self.manual_transition()
 
-
-
     def arming_transition(self):
         print("arming transition")
         self.take_control()
@@ -76,10 +71,9 @@ class BackyardFlyer(Drone):
 
         self.flight_state = States.ARMING 
     
-    
     def calculate_box(self):
         print("Setting Home")
-        local_waypoints = [[15.0, 0.0, 5.0], [15.0, 15.0, 5.0], [0.0, 15.0, 5.0], [0.0, 0.0, 5.0]]
+        local_waypoints = [[15.0, 0.0, 40.0], [15.0, 15.0, 40.0], [0.0, 15.0, 40.0], [0.0, 0.0, 40.0]]
         return local_waypoints
     
     def waypoint_transition(self):
@@ -91,7 +85,7 @@ class BackyardFlyer(Drone):
 
     def takeoff_transition(self):
         print("takeoff transition")
-        target_altitude = 5.0
+        target_altitude = 40.0
         self.target_position[2] = target_altitude
         self.takeoff(target_altitude)
         self.flight_state = States.TAKEOFF
@@ -120,7 +114,6 @@ class BackyardFlyer(Drone):
         self.connection.start()
         print("Closing log file")
         self.stop_log()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
